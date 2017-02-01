@@ -11,6 +11,9 @@ page_header = """
         label{
             color:teal;
         }
+        span{
+            color:red;
+        }
     </style>
 </head>
 <body>
@@ -25,27 +28,32 @@ page_footer = """
 """
 class MainHandler(webapp2.RequestHandler):
     def get(self):
+        error_username = self.request.get("error_username")
+        error_password = self.request.get("error_password")
+        error_mismatch_password = self.request.get("error_mismatch_password")
+        error_email = self.request.get("error_email")
+
         newuser_form = """
         <form action= "/created" method="post">
         <label>
             Username
             <input type="text" name="username"/>
-        </label>
+        </label><span>"""+error_username+"""</span>
         <br>
         <label>
             Password
             <input type="password" name="password"/>
-        </label>
+        </label><span>"""+error_password+"""</span>
         <br>
         <label>
             Verify Password
             <input type="password" name="ver_password"/>
-        </label>
+        </label><span>"""+error_mismatch_password+"""</span>
         <br>
         <label>
             Email (optional)
             <input type="text" name="email"/>
-        </label>
+        </label><span>"""+error_email+"""</span>
         <br>
         <input type="submit" value="Create User"/>
 
@@ -57,10 +65,10 @@ class MainHandler(webapp2.RequestHandler):
 
 class NewUserHandler(webapp2.RequestHandler):
     def post(self):
-        ui_username = self.request.get("username")
-        ui_password = self.request.get("password")
-        ui_verpassword = self.request.get("ver_password")
-        ui_email = self.request.get("email")
+        ui_username = cgi.escape(self.request.get("username"))
+        ui_password = cgi.escape(self.request.get("password"))
+        ui_verpassword = cgi.escape(self.request.get("ver_password"))
+        ui_email = cgi.escape(self.request.get("email"))
 
         USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
         PASSWORD_RE = re.compile(r"^.{3,20}$")
@@ -108,7 +116,17 @@ class NewUserHandler(webapp2.RequestHandler):
         if error_count == 0:
             self.response.write("Welcome " + ui_username)
         else:
-            self.response.write(error_username + "<br>" +error_password + "<br>"+error_mismatch_password + "<br>"+error_email)
+            error_string = "/?"
+            if error_username != '':
+                error_string += "error_username=" + error_username + "&"
+            if error_password != '':
+                error_string += "error_password=" + error_password + "&"
+            if error_mismatch_password != '':
+                error_string += "error_mismatch_password=" + error_mismatch_password + "&"
+            if error_email != '':
+                error_string += "error_email=" + error_email
+
+            self.redirect(error_string)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
