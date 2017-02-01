@@ -50,7 +50,7 @@ class MainHandler(webapp2.RequestHandler):
         <form action= "/created" method="post">
         <label>
             Username
-            <input type="text" name="username" """ + insert_username + """>
+            <input type="text" name="username" """ + cgi.escape(insert_username) + """>
         </label><span>"""+error_username+"""</span>
         <br>
         <label>
@@ -65,7 +65,7 @@ class MainHandler(webapp2.RequestHandler):
         <br>
         <label>
             Email (optional)
-            <input type="text" name="email" """+ insert_email +""">
+            <input type="text" name="email" """+ cgi.escape(insert_email) +""">
         </label><span>"""+error_email+"""</span>
         <br>
         <input type="submit" value="Create User"/>
@@ -78,10 +78,12 @@ class MainHandler(webapp2.RequestHandler):
 
 class NewUserHandler(webapp2.RequestHandler):
     def post(self):
-        ui_username = cgi.escape(self.request.get("username"))
+        ori_username = self.request.get("username")
+        ori_email = self.request.get("email")
+        ui_username = cgi.escape(ori_username)
         ui_password = cgi.escape(self.request.get("password"))
         ui_verpassword = cgi.escape(self.request.get("ver_password"))
-        ui_email = cgi.escape(self.request.get("email"))
+        ui_email = cgi.escape(ori_email)
 
 
 
@@ -140,7 +142,7 @@ class NewUserHandler(webapp2.RequestHandler):
                 error_string += "error_mismatch_password=" + error_mismatch_password + "&"
             if error_email != '':
                 error_string += "error_email=" + error_email + "&"
-            error_string += "username=" + ui_username + "&email=" + ui_email
+            error_string += "username=" + ori_username + "&email=" + ori_email
 
             self.redirect(error_string)
 
