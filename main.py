@@ -33,16 +33,29 @@ class MainHandler(webapp2.RequestHandler):
         error_mismatch_password = self.request.get("error_mismatch_password")
         error_email = self.request.get("error_email")
 
+        ui_username = self.request.get("username")
+        ui_email = self.request.get("email")
+
+        if ui_username != '':
+            insert_username = "value=" + ui_username
+        else:
+            insert_username = ""
+
+        if ui_email != '':
+            insert_email = "value=" + ui_email
+        else:
+            insert_email = ""
+
         newuser_form = """
         <form action= "/created" method="post">
         <label>
             Username
-            <input type="text" name="username"/>
+            <input type="text" name="username" """ + insert_username + """>
         </label><span>"""+error_username+"""</span>
         <br>
         <label>
             Password
-            <input type="password" name="password"/>
+            <input type="password" name="password">
         </label><span>"""+error_password+"""</span>
         <br>
         <label>
@@ -52,7 +65,7 @@ class MainHandler(webapp2.RequestHandler):
         <br>
         <label>
             Email (optional)
-            <input type="text" name="email"/>
+            <input type="text" name="email" """+ insert_email +""">
         </label><span>"""+error_email+"""</span>
         <br>
         <input type="submit" value="Create User"/>
@@ -69,6 +82,8 @@ class NewUserHandler(webapp2.RequestHandler):
         ui_password = cgi.escape(self.request.get("password"))
         ui_verpassword = cgi.escape(self.request.get("ver_password"))
         ui_email = cgi.escape(self.request.get("email"))
+
+
 
         USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
         PASSWORD_RE = re.compile(r"^.{3,20}$")
@@ -124,7 +139,8 @@ class NewUserHandler(webapp2.RequestHandler):
             if error_mismatch_password != '':
                 error_string += "error_mismatch_password=" + error_mismatch_password + "&"
             if error_email != '':
-                error_string += "error_email=" + error_email
+                error_string += "error_email=" + error_email + "&"
+            error_string += "username=" + ui_username + "&email=" + ui_email
 
             self.redirect(error_string)
 
