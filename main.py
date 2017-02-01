@@ -1,20 +1,6 @@
-#!/usr/bin/env python
-#
-# Copyright 2007 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 import webapp2
+import cgi
+
 
 page_header = """
 <!DOCTYPE html>
@@ -22,11 +8,8 @@ page_header = """
 <head>
     <title>UserSignup</title>
     <style type="text/css">
-        .error {
-            color: red;
-        }
         label{
-            width: 500;
+            color:teal;
         }
     </style>
 </head>
@@ -47,22 +30,22 @@ class MainHandler(webapp2.RequestHandler):
         <form action= "/created" method="post">
         <label>
             Username
-            <input type="text" name="new-movie"/>
+            <input type="text" name="username"/>
         </label>
         <br>
         <label>
             Password
-            <input type="text" name="new-movie"/>
+            <input type="password" name="password"/>
         </label>
         <br>
         <label>
             Verify Password
-            <input type="text" name="new-movie"/>
+            <input type="password" name="ver_password"/>
         </label>
         <br>
         <label>
             Email (optional)
-            <input type="text" name="new-movie"/>
+            <input type="text" name="email"/>
         </label>
         <br>
         <input type="submit" value="Create User"/>
@@ -73,6 +56,17 @@ class MainHandler(webapp2.RequestHandler):
 
         self.response.write(page_header + newuser_form + page_footer)
 
+class NewUserHandler(webapp2.RequestHandler):
+    def post(self):
+        ui_username = self.request.get("username")
+        ui_password = self.request.get("password")
+        ui_verpassword = self.request.get("ver_password")
+        ui_email = self.request.get("email")
+
+        self.response.write("Welcome " + ui_username)
+
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', MainHandler),
+    ('/created',NewUserHandler)
+
 ], debug=True)
