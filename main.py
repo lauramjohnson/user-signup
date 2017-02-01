@@ -8,10 +8,17 @@ page_header = """
 <head>
     <title>UserSignup</title>
     <style type="text/css">
-        label{
+        *{
+            font-family:Verdana;
+        }
+        table{
+            border:1px solid salmon;
+        }
+        .column1{
+            width:150px;
             color:teal;
         }
-        span{
+        .column3{
             color:red;
         }
     </style>
@@ -47,26 +54,57 @@ class MainHandler(webapp2.RequestHandler):
             insert_email = ""
 
         newuser_form = """
-        <form action= "/created" method="post">
-        <label>
-            Username
-            <input type="text" name="username" """ + cgi.escape(insert_username) + """>
-        </label><span>"""+error_username+"""</span>
-        <br>
-        <label>
-            Password
-            <input type="password" name="password">
-        </label><span>"""+error_password+"""</span>
-        <br>
-        <label>
-            Verify Password
-            <input type="password" name="ver_password"/>
-        </label><span>"""+error_mismatch_password+"""</span>
-        <br>
-        <label>
-            Email (optional)
-            <input type="text" name="email" """+ cgi.escape(insert_email) +""">
-        </label><span>"""+error_email+"""</span>
+        <table>
+        <form action= "/welcome" method="post">
+        <tr>
+            <td class="column1">
+                <label>Username
+            </td>
+            <td class="column2">
+                <input type="text" name="username" """ + cgi.escape(insert_username) + """>
+            </td>
+            <td class="column3">
+                """ + error_username + """
+            </td>
+        </tr></label>
+
+        <tr>
+            <td class="column1">
+                <label>Password
+            </td>
+            <td class="column2">
+                <input type="password" name="password">
+            </td>
+            <td class="column3">
+                """ + error_password + """
+            </td>
+        </tr></label>
+
+        <tr>
+            <td class="column1">
+                <label>Verify Password
+            </td>
+            <td class="column2">
+                <input type="password" name="ver_password">
+            </td>
+            <td class="column3">
+                """ + error_mismatch_password + """
+            </td>
+        </tr></label>
+
+        <tr>
+            <td class="column1">
+                <label>Email (optional)
+            </td>
+            <td class="column2">
+                <input type="text" name="email" """+ cgi.escape(insert_email) +""">
+            </td>
+            <td class="column3">
+                """ + error_email + """
+            </td>
+        </tr></label>
+
+        </table>
         <br>
         <input type="submit" value="Create User"/>
 
@@ -148,6 +186,6 @@ class NewUserHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/created',NewUserHandler)
+    ('/welcome',NewUserHandler)
 
 ], debug=True)
