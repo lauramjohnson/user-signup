@@ -11,8 +11,12 @@ page_header = """
         *{
             font-family:Verdana;
         }
+        body{
+            background-color:mistyrose;
+        }
         table{
             border:1px solid salmon;
+            background-color:lightgray;
         }
         .column1{
             width:150px;
@@ -20,6 +24,7 @@ page_header = """
         }
         .column3{
             color:red;
+
         }
     </style>
 </head>
